@@ -1,18 +1,15 @@
 import "./styles.css";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 //Import Apps
 import Login from "./component/auth/Login";
 
 export default function App() {
-  const [LoggedInState, setLoggedInState] = useState(false);
-  const [state, setState] = useState({});
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   return (
     <div className="App">
-      {!LoggedInState ? (
-        <Login setLoggedInState={setLoggedInState} setState={setState}></Login>
-      ) : null}
+      {!isLoggedIn ? <Login setLoggedInState={setIsLoggedIn}></Login> : null}
     </div>
   );
 }
