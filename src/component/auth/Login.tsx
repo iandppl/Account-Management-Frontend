@@ -1,17 +1,11 @@
 import "../../styles.css";
-import { useState, useEffect } from "react";
 
-//Route Imports
 import { Link } from "react-router-dom";
-
-//Prime Imports
 import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 
-const Login = () => {
-  const [Error, setError] = useState(false);
-  const [username, setUsername] = useState("");
+const Login = (props) => {
   return (
     <div className="login-container">
       <Card
@@ -22,24 +16,16 @@ const Login = () => {
         <br />
         <div className="p-fluid">
           <div className="p-field">
-            <InputText
-              id="username"
-              type="username"
-              value={username}
-              placeholder="Username"
-            />
+            <InputText id="username" type="username" placeholder="Username" />
           </div>
           <div className="login-form-between-padding"></div>
           <div className="p-field">
             <InputText id="password" type="password" placeholder="Password" />
             <br />
             <br />
-            {Error ? (
-              <small id="login-help">Username or Password is incorrect!</small>
-            ) : null}
           </div>
           <div className="p-field">
-            <Button label="Login" />
+            <Button label="Login" onClick={props.login} />
           </div>
           <div className="p-field">
             <Link
