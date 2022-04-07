@@ -2,7 +2,7 @@ import "../../styles.css";
 import { useState, useEffect } from "react";
 
 //Route Imports
-import { Link, browserHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 //Prime Imports
 import { Card } from "primereact/card";
