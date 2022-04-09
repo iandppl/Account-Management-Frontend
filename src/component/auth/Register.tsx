@@ -1,5 +1,5 @@
 import "../../styles.css";
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 //Route Imports
 import { Link } from "react-router-dom";
@@ -13,6 +13,15 @@ const Register = () => {
   const [Error, setError] = useState(false);
   const [username, setUsername] = useState("");
 
+  const usernameRef: any = useRef();
+  const passwordRef: any = useRef();
+
+  const loginHandler = () => {
+    const userName = usernameRef.current.value;
+    const password = passwordRef.current.value;
+
+    console.log(userName, password)
+  }
   return (
     <div className="login-container">
       <Card
@@ -28,11 +37,12 @@ const Register = () => {
               type="username"
               value={username}
               placeholder="Username"
+              ref={usernameRef}
             />
           </div>
           <div className="login-form-between-padding"></div>
           <div className="p-field">
-            <InputText id="password" type="password" placeholder="Password" />
+            <InputText id="password" type="password" placeholder="Password" ref={passwordRef} />
             <br />
             <br />
             {Error ? (
@@ -40,7 +50,7 @@ const Register = () => {
             ) : null}
           </div>
           <div className="p-field">
-            <Button label="Login" />
+            <Button label="Login" onClick={() => loginHandler()} />
           </div>
           <div className="p-field">
             <Link
