@@ -1,11 +1,11 @@
 import "../../styles.css";
-
+import * as constants from "../../constants"
 import { Link } from "react-router-dom";
 import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
-
 const Login = (props) => {
+
   return (
     <div className="login-container">
       <Card
@@ -33,6 +33,7 @@ const Login = (props) => {
               style={{
                 display: "block",
                 margin: "1rem 0",
+                fontWeight: "Bold",
                 textDecoration: "none",
               }}
               to={`/register`}

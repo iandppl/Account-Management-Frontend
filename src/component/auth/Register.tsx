@@ -48,6 +48,7 @@ const Register = () => {
               style={{
                 display: "block",
                 margin: "1rem 0",
+                fontWeight: "Bold",
                 textDecoration: "none",
               }}
               to={`/register`}

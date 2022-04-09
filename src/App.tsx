@@ -7,6 +7,11 @@ import Login from "./component/auth/Login.tsx";
 import Register from "./component/auth/Register.tsx";
 import HomePage from "./component/HomePage.tsx";
 
+// themes from prime react
+import "primereact/resources/themes/lara-light-indigo/theme.css";  //theme
+import "primereact/resources/primereact.min.css";                  //core css
+import "primeicons/primeicons.css";
+
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 

@@ -3,10 +3,7 @@ html {
 }
 
 body {
-    background: rgb(0, 212, 255);
-    background: radial-gradient(circle,
-            rgba(0, 212, 255, 1) 0%,
-            rgba(100, 100, 166, 1) 0%);
+    background: #B5B5B5;
     font-family: "Quicksand", sans-serif;
     font-weight: 500;
     -webkit-font-smoothing: antialiased;
