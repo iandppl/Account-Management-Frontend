@@ -1,6 +1,6 @@
 import "../../styles.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 import { useState, useRef } from "react";
-
 //Route Imports
 import { Link } from "react-router-dom";
 
@@ -12,9 +12,20 @@ import { Button } from "primereact/button";
 const Register = () => {
   const [Error, setError] = useState(false);
   const [username, setUsername] = useState("");
+  const [modalState, setModalState] = useState(false);
 
   const usernameRef: any = useRef();
   const passwordRef: any = useRef();
+
+  // closing pop up modal
+  const onCloseModal = () => {
+    setModalState(false);
+  }
+
+  // opening pop up modal
+  const onOpenModal = () => {
+    setModalState(true);
+  }
 
   const loginHandler = () => {
     const userName = usernameRef.current.value;

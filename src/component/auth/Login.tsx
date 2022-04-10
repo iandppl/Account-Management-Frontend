@@ -1,18 +1,33 @@
 // @ts-nocheck
 import "../../styles.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+
 import * as constants from "../../constants/index.tsx";
 import { Link } from "react-router-dom";
 import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
-import { useReducer, useRef } from "react";
+import { useReducer, useRef, useState } from "react";
+import { Modal } from 'react-bootstrap';
 import loginReducer from "../reducer/Login.tsx";
 const Login = (props) => {
+  const [modalState, setModalState] = useState(false);
+
+  const usernameRef: any = useRef();
+  const passwordRef: any = useRef();
 
   const initialState: any = { isValid: false, message: "" };
   const [loginState, loginDispatch] = useReducer(loginReducer, initialState);
-  const usernameRef: any = useRef();
-  const passwordRef: any = useRef();
+
+  // closing pop up modal
+  const onCloseModal = () => {
+    setModalState(false);
+  }
+
+  // opening pop up modal
+  const onOpenModal = () => {
+    setModalState(true);
+  }
 
   const loginHandler = () => {
     const userName = usernameRef.current.value;
@@ -20,7 +35,7 @@ const Login = (props) => {
     loginDispatch({ type: constants.LOGIN, payload: { userName, password } });
   }
 
-  if (loginState.isValid) {
+  if (loginState.isValid === true) {
     console.log("Login Successful!");
   }
   if (loginState.message !== "") {
@@ -45,6 +60,8 @@ const Login = (props) => {
             <br />
             <br />
           </div>
+          <div onClick={() => onOpenModal()} class={{ cursor: "pointer" }}>Forget Password?</div>
+          <br />
           <div className="p-field">
             {/* <Button label="Login" onClick={props.login} /> */}
             <Button label="Login" onClick={() => loginHandler()} />
@@ -67,6 +84,24 @@ const Login = (props) => {
           <div style={loginState.isValid ? { color: "black" } : { color: "red" }}>{loginState.message}</div>
         </div>
       </Card>
+
+      {/* pop up model */}
+      <Modal show={modalState} onHide={() => onCloseModal()}
+        backdrop="static"
+        keyboard={false}>
+        <Modal.Header closeButton>
+          <Modal.Title>Forget Password</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => onCloseModal()}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={() => onCloseModal()}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

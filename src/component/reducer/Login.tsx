@@ -14,7 +14,7 @@ const loginReducer = (state, action) => {
                     };
                 } else {
                     return {
-                        isValid: true,
+                        isValid: false,
                         message: "Invalid E-Mail or password"
                     };
                 }
@@ -27,7 +27,7 @@ const loginReducer = (state, action) => {
                     };
                 } else {
                     return {
-                        isValid: true,
+                        isValid: false,
                         message: "Invalid username or password"
                     };
                 }
