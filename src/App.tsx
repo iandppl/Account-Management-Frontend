@@ -27,6 +27,7 @@ const App = () => {
         // show home page when isLoggedIn = true
         <Route path="/" element={<HomePage logout={logoutHandler} />} />
       ) : (
+        // show login page when isLoggedIn = false
         <Route path="/" element={<Login login={loginHandler} />} />
       )}
       <Route path="/register" element={<Register />} />

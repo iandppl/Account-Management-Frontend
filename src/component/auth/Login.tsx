@@ -3,18 +3,20 @@ import "../../styles.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import * as constants from "../../constants/index.tsx";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { useReducer, useRef, useState } from "react";
 import { Modal } from 'react-bootstrap';
 import loginReducer from "../reducer/Login.tsx";
+
 const Login = (props) => {
   const [modalState, setModalState] = useState(false);
 
   const usernameRef: any = useRef();
   const passwordRef: any = useRef();
+  const navigate = useNavigate();
 
   const initialState: any = { isValid: false, message: "" };
   const [loginState, loginDispatch] = useReducer(loginReducer, initialState);
@@ -35,13 +37,23 @@ const Login = (props) => {
     loginDispatch({ type: constants.LOGIN, payload: { userName, password } });
   }
 
+  const redirectToRegisterPage = () => {
+    navigate('/register');
+  }
+  const redirectToMainPage = () => {
+    navigate('/');
+  }
+
   if (loginState.isValid === true) {
     console.log("Login Successful!");
+    props.login();
   }
   if (loginState.message !== "") {
     console.log(loginState.message);
   }
-
+  if (props.isLoggedIn) {
+    redirectToMainPage();
+  }
   return (
     <div className="login-container">
       <Card
@@ -52,21 +64,26 @@ const Login = (props) => {
         <br />
         <div className="p-fluid">
           <div className="p-field">
-            <InputText id="username" type="username" placeholder="Username" ref={usernameRef} />
+            <InputText id="username" type="username" placeholder="Username or E-Mail" ref={usernameRef} />
           </div>
           <div className="login-form-between-padding"></div>
           <div className="p-field">
             <InputText id="password" type="password" placeholder="Password" ref={passwordRef} />
             <br />
             <br />
+            <div style={loginState.isValid ? { color: "black" } : { color: "red" }}>{loginState.message}</div>
           </div>
-          <div onClick={() => onOpenModal()} class={{ cursor: "pointer" }}>Forget Password?</div>
           <br />
           <div className="p-field">
             {/* <Button label="Login" onClick={props.login} /> */}
             <Button label="Login" onClick={() => loginHandler()} />
           </div>
+          <br />
           <div className="p-field">
+            {/* <Button label="Login" onClick={props.login} /> */}
+            <Button label="Register" onClick={() => redirectToRegisterPage()} />
+          </div>
+          {/* <div className="p-field">
             <Link
               className="p-button"
               style={{
@@ -79,9 +96,9 @@ const Login = (props) => {
             >
               Register
             </Link>
-          </div>
-
-          <div style={loginState.isValid ? { color: "black" } : { color: "red" }}>{loginState.message}</div>
+          </div> */}
+          <br />
+          <div onClick={() => onOpenModal()} class={{ cursor: "pointer" }}>Forget Password?</div>
         </div>
       </Card>
 

@@ -1,21 +1,24 @@
+// @ts-nocheck
 import "../../styles.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useState, useRef } from "react";
-//Route Imports
-import { Link } from "react-router-dom";
 
-//Prime Imports
+import * as constants from "../../constants/index.tsx";
+import { useNavigate } from "react-router-dom";
 import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
+import { useReducer, useRef, useState } from "react";
+import { Modal } from 'react-bootstrap';
+import loginReducer from "../reducer/Login.tsx";
 
 const Register = () => {
-  const [Error, setError] = useState(false);
-  const [username, setUsername] = useState("");
   const [modalState, setModalState] = useState(false);
 
   const usernameRef: any = useRef();
   const passwordRef: any = useRef();
+
+  const initialState: any = { isValid: false, message: "" };
+  const [loginState, loginDispatch] = useReducer(loginReducer, initialState);
 
   // closing pop up modal
   const onCloseModal = () => {
@@ -30,40 +33,46 @@ const Register = () => {
   const loginHandler = () => {
     const userName = usernameRef.current.value;
     const password = passwordRef.current.value;
-
-    console.log(userName, password)
+    loginDispatch({ type: constants.LOGIN, payload: { userName, password } });
   }
+
+  if (loginState.isValid === true) {
+    console.log("Login Successful!");
+  }
+  if (loginState.message !== "") {
+    console.log(loginState.message);
+  }
+
   return (
     <div className="login-container">
       <Card
-        title="Login"
+        title="Register Page"
         className="login-card p-shadow-24"
         style={{ width: "25rem", marginBottom: "2em" }}
       >
         <br />
         <div className="p-fluid">
           <div className="p-field">
-            <InputText
-              id="username"
-              type="username"
-              value={username}
-              placeholder="Username"
-              ref={usernameRef}
-            />
+            <InputText id="username" type="username" placeholder="Username or E-Mail" ref={usernameRef} />
           </div>
           <div className="login-form-between-padding"></div>
           <div className="p-field">
             <InputText id="password" type="password" placeholder="Password" ref={passwordRef} />
             <br />
             <br />
-            {Error ? (
-              <small id="login-help">Username or Password is incorrect!</small>
-            ) : null}
+            <div style={loginState.isValid ? { color: "black" } : { color: "red" }}>{loginState.message}</div>
           </div>
+          <br />
           <div className="p-field">
+            {/* <Button label="Login" onClick={props.login} /> */}
             <Button label="Login" onClick={() => loginHandler()} />
           </div>
+          <br />
           <div className="p-field">
+            {/* <Button label="Login" onClick={props.login} /> */}
+            <Button label="Register" onClick={() => redirectToRegisterPage()} />
+          </div>
+          {/* <div className="p-field">
             <Link
               className="p-button"
               style={{
@@ -76,9 +85,27 @@ const Register = () => {
             >
               Register
             </Link>
-          </div>
+          </div> */}
         </div>
       </Card>
+
+      {/* pop up model */}
+      <Modal show={modalState} onHide={() => onCloseModal()}
+        backdrop="static"
+        keyboard={false}>
+        <Modal.Header closeButton>
+          <Modal.Title>Forget Password</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => onCloseModal()}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={() => onCloseModal()}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };
