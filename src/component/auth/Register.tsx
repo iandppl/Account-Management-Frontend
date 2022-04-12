@@ -7,19 +7,48 @@ import { useNavigate } from "react-router-dom";
 import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
-import { useReducer, useRef, useState } from "react";
+import { useEffect, useReducer, useRef, useState } from "react";
 import { Modal } from "react-bootstrap";
-import loginReducer from "../../reducer/auth/authReducer.tsx";
+import authReducer from "../../reducer/auth/authReducer.tsx";
 
 const Register = (props) => {
   const [modalState, setModalState] = useState(false);
 
+  const nameRef: any = useRef();
   const usernameRef: any = useRef();
+  const emailRef: any = useRef();
+  const contactNumberRef: any = useRef();
   const passwordRef: any = useRef();
   const navigate = useNavigate();
 
   const initialState: any = { isValid: false, message: "" };
-  const [loginState, loginDispatch] = useReducer(loginReducer, initialState);
+  const [registerState, registerDispatch] = useReducer(
+    authReducer,
+    initialState
+  );
+
+  useEffect(() => {
+    if (registerState.feedback === "name") {
+      document.getElementById("name").style.backgroundColor = "#FBE9E9";
+      document.getElementById("name").focus();
+    }
+    if (registerState.feedback === "username") {
+      document.getElementById("username").style.backgroundColor = "#FBE9E9";
+      document.getElementById("username").focus();
+    }
+    if (registerState.feedback === "email") {
+      document.getElementById("email").style.backgroundColor = "#FBE9E9";
+      document.getElementById("email").focus();
+    }
+    if (registerState.feedback === "contactNumber") {
+      document.getElementById("contact").style.backgroundColor = "#FBE9E9";
+      document.getElementById("contact").focus();
+    }
+    if (registerState.feedback === "password") {
+      document.getElementById("password").style.backgroundColor = "#FBE9E9";
+      document.getElementById("password").focus();
+    }
+  }, [registerState]);
 
   // closing pop up modal
   const onCloseModal = () => {
@@ -31,15 +60,36 @@ const Register = (props) => {
     setModalState(true);
   };
 
-  const loginHandler = () => {
-    const userName = usernameRef.current.value;
+  const redirectToLoginPage = () => {
+    navigate("/");
+  };
+
+  const resetInput = () => {
+    document.getElementById("name").style.backgroundColor = "white";
+    document.getElementById("username").style.backgroundColor = "white";
+    document.getElementById("email").style.backgroundColor = "white";
+    document.getElementById("contact").style.backgroundColor = "white";
+    document.getElementById("password").style.backgroundColor = "white";
+    registerDispatch({ type: authConstants.RESET_INPUT });
+  };
+
+  const registerHandler = () => {
+    const name = nameRef.current.value;
+    const username = usernameRef.current.value;
+    const email = emailRef.current.value;
+    const contactNumber = contactNumberRef.current.value;
     const password = passwordRef.current.value;
-    loginDispatch({ type: constants.LOGIN, payload: { userName, password } });
+
+    registerDispatch({
+      type: authConstants.REGISTER,
+      payload: { name, username, email, contactNumber, password },
+    });
   };
 
   if (props.isLoggedIn) {
-    navigate("/");
+    redirectToLoginPage();
   }
+
   return (
     <div className="login-container">
       <Card
@@ -51,10 +101,41 @@ const Register = (props) => {
         <div className="p-fluid">
           <div className="p-field">
             <InputText
+              id="name"
+              type="name"
+              placeholder="Your Name"
+              ref={nameRef}
+              onKeyDown={() => resetInput()}
+            />
+          </div>
+          <div className="login-form-between-padding"></div>
+          <div className="p-field">
+            <InputText
               id="username"
               type="username"
-              placeholder="Username or E-Mail"
+              placeholder="Username"
               ref={usernameRef}
+              onKeyDown={() => resetInput()}
+            />
+          </div>
+          <div className="login-form-between-padding"></div>
+          <div className="p-field">
+            <InputText
+              id="email"
+              type="email"
+              placeholder="E-Mail"
+              ref={emailRef}
+              onKeyDown={() => resetInput()}
+            />
+          </div>
+          <div className="login-form-between-padding"></div>
+          <div className="p-field">
+            <InputText
+              id="contact"
+              type="contact"
+              placeholder="Contact Number"
+              ref={contactNumberRef}
+              onKeyDown={() => resetInput()}
             />
           </div>
           <div className="login-form-between-padding"></div>
@@ -64,39 +145,37 @@ const Register = (props) => {
               type="password"
               placeholder="Password"
               ref={passwordRef}
+              onKeyDown={() => resetInput()}
             />
-            <br />
-            <br />
-            <div
-              style={loginState.isValid ? { color: "black" } : { color: "red" }}
-            >
-              {loginState.message}
-            </div>
           </div>
+          <br />
+          <br />
+          <div
+            style={
+              registerState.isValid ? { color: "black" } : { color: "red" }
+            }
+          >
+            {registerState.message}
+          </div>
+          <br />
           <br />
           <div className="p-field">
             {/* <Button label="Login" onClick={props.login} /> */}
-            <Button label="Login" onClick={() => loginHandler()} />
+            <Button label="Register" onClick={() => registerHandler()} />
           </div>
           <br />
+          <br />
+          <hr />
+          <br />
           <div className="p-field">
-            {/* <Button label="Login" onClick={props.login} /> */}
-            <Button label="Register" onClick={() => redirectToRegisterPage()} />
-          </div>
-          {/* <div className="p-field">
-            <Link
-              className="p-button"
-              style={{
-                display: "block",
-                margin: "1rem 0",
-                fontWeight: "Bold",
-                textDecoration: "none",
-              }}
-              to={`/register`}
+            Have an account?{" "}
+            <span
+              onClick={() => redirectToLoginPage()}
+              style={{ textDecoration: "underline", cursor: "pointer" }}
             >
-              Register
-            </Link>
-          </div> */}
+              Login here
+            </span>
+          </div>
         </div>
       </Card>
 

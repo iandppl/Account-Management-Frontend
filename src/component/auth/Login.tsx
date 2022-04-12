@@ -9,21 +9,22 @@ import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { useEffect, useReducer, useRef, useState } from "react";
 import { Modal } from "react-bootstrap";
-import loginReducer from "../../reducer/auth/authReducer.tsx";
+import authReducer from "../../reducer/auth/authReducer.tsx";
 
 const Login = (props) => {
-  const usernameRef: any = useRef();
-  const passwordRef: any = useRef();
+  const usernameRef = useRef();
+  const passwordRef = useRef();
   const navigate = useNavigate();
 
-  const initialState: any = { isValid: false, message: "" };
-  const [loginState, loginDispatch] = useReducer(loginReducer, initialState);
+  const initialState = { isValid: false, message: "", feedback: "" };
+  const [loginState, loginDispatch] = useReducer(authReducer, initialState);
 
   const [modalState, setModalState] = useState(false);
 
   useEffect(() => {
     if (loginState.message !== "") {
       document.getElementById("username").style.backgroundColor = "#FBE9E9";
+      document.getElementById("username").focus();
       document.getElementById("password").style.backgroundColor = "#FBE9E9";
     }
   }, [loginState]);
