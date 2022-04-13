@@ -1,7 +1,6 @@
 // @ts-nocheck
-import "../../styles.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-
+import "./authStyles.css";
 // import * as authConstants from "../../constants/authConstants.tsx";
 import { useNavigate } from "react-router-dom";
 import { Card } from "primereact/card";

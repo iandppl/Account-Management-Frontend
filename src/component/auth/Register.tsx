@@ -1,5 +1,4 @@
 // @ts-nocheck
-import "../../styles.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import * as authConstants from "../../constants/authConstants.tsx";

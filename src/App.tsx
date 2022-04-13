@@ -1,7 +1,7 @@
 // @ts-nocheck
-import "./styles.css";
 import React, { useState } from "react";
 import { Routes, Route } from "react-router-dom";
+import './styles.css';
 
 import Login from "./component/auth/Login.tsx";
 import Register from "./component/auth/Register.tsx";

@@ -1,13 +1,12 @@
 // @ts-nocheck
-import "../../styles.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-
+import "./authStyles.css";
 import * as authConstants from "../../constants/authConstants.tsx";
 import { useNavigate } from "react-router-dom";
 import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
-import { useEffect, useReducer, useRef, useState } from "react";
+import React, { useEffect, useReducer, useRef, useState } from "react";
 import { Modal } from "react-bootstrap";
 import authReducer from "../../reducer/auth/authReducer.tsx";
 
@@ -77,6 +76,7 @@ const Login = (props) => {
 
   return (
     <div className="login-container">
+      TestingJest
       <Card
         title="Login Page"
         className="login-card p-shadow-24"
