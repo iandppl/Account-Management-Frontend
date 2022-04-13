@@ -1,6 +1,6 @@
 import React from "react";
 
-const HomePage = (props) => {
+const HomePage = (props: any) => {
   return (
     <div>
       HomePage

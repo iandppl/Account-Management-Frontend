@@ -4,7 +4,6 @@ import * as authConstants from "../../constants/authConstants.tsx";
 const loginReducer = (state, action) => {
   switch (action.type) {
     case authConstants.LOGIN:
-      // login by email
       if (action.payload.userName.includes("@")) {
         if (
           //eslint-disable-next-line
@@ -40,61 +39,102 @@ const loginReducer = (state, action) => {
           };
         }
       }
+
     case authConstants.REGISTER:
       // SUCCESS CASE
       if (
-        action.payload.name.length > 0 &&
-        action.payload.username.length > 0 &&
-        action.payload.email.includes("@") &&
-        action.payload.email.length > 0 &&
-        action.payload.contactNumber.length > 0 &&
-        action.payload.password.length > 0
+        action.payload.name.length > 2 &&
+        action.payload.userName.length > 3 &&
+        //eslint-disable-next-line
+        /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(
+          action.payload.userName
+        ) &&
+        action.payload.contactNumber.length > 7 &&
+        action.payload.password.length > 5
       ) {
+        console.log("SUCCESS");
         return {
           isValid: true,
-          message: "successful registration",
+          message: "",
         };
       } else {
+        // FAILURE CASE
+        if (action.payload.name.length < 3) {
+          return {
+            isValid: false,
+            message: "Please enter your name",
+            feedback: "name",
+          };
+        }
+        if (action.payload.userName.length < 4) {
+          return {
+            isValid: false,
+            message: "Please enter your username",
+            feedback: "username",
+          };
+        }
+        if (
+          //eslint-disable-next-line
+          !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(
+            action.payload.email
+          )
+        ) {
+          return {
+            isValid: false,
+            message: "Please enter your email",
+            feedback: "email",
+          };
+        }
+        if (action.payload.contactNumber.length < 8) {
+          return {
+            isValid: false,
+            message: "Please enter your contact number",
+            feedback: "contactNumber",
+          };
+        }
+        if (action.payload.password.length < 6) {
+          return {
+            isValid: false,
+            message: "Please enter your password",
+            feedback: "password",
+          };
+        }
       }
 
-      // FAILURE CASE
-      if (action.payload.name.length === 0) {
-        return {
-          isValid: false,
-          message: "Please enter your name",
-          feedback: "name",
-        };
-      }
-      if (action.payload.username.length === 0) {
-        return {
-          isValid: false,
-          message: "Please enter your username",
-          feedback: "username",
-        };
-      }
-      if (
-        !action.payload.email.includes("@") ||
-        action.payload.email.length === 0
-      ) {
-        return {
-          isValid: false,
-          message: "Please enter your email",
-          feedback: "email",
-        };
-      }
-      if (action.payload.contactNumber.length === 0) {
-        return {
-          isValid: false,
-          message: "Please enter your contact number",
-          feedback: "contactNumber",
-        };
-      }
-      if (action.payload.password.length === 0) {
-        return {
-          isValid: false,
-          message: "Please enter your password",
-          feedback: "password",
-        };
+    case authConstants.RESET_PASSWORD:
+      if (action.payload.userName.includes("@")) {
+        if (
+          //eslint-disable-next-line
+          /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(
+            action.payload.userName
+          )
+        ) {
+          return {
+            isValid: true,
+            message: "Please check your email to reset your password",
+            feedback: "success",
+          };
+        } else {
+          return {
+            isValid: false,
+            message: "You have entered an invalid E-Mail",
+          };
+        }
+      } else {
+        if (action.payload.userName.length > 3) {
+          return {
+            isValid: true,
+            message: "Please check your email to reset your password",
+            feedback: "success",
+          };
+        }
+        if (action.payload.userName.length < 4) {
+          return {
+            isValid: false,
+            message: "Please enter a valid username or E-Mail",
+            feedback: "",
+          };
+        }
       }
 
     case authConstants.RESET_INPUT:
@@ -103,6 +143,7 @@ const loginReducer = (state, action) => {
         message: "",
         feedback: "",
       };
+
     default:
       return {
         isValid: false,

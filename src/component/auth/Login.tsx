@@ -1,13 +1,12 @@
 // @ts-nocheck
-import "../../styles.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-
+import "./authStyles.css";
 import * as authConstants from "../../constants/authConstants.tsx";
 import { useNavigate } from "react-router-dom";
 import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
-import { useEffect, useReducer, useRef, useState } from "react";
+import React, { useEffect, useReducer, useRef, useState } from "react";
 import { Modal } from "react-bootstrap";
 import authReducer from "../../reducer/auth/authReducer.tsx";
 
@@ -18,7 +17,6 @@ const Login = (props) => {
 
   const initialState = { isValid: false, message: "", feedback: "" };
   const [loginState, loginDispatch] = useReducer(authReducer, initialState);
-
   const [modalState, setModalState] = useState(false);
 
   useEffect(() => {
@@ -27,7 +25,17 @@ const Login = (props) => {
       document.getElementById("username").focus();
       document.getElementById("password").style.backgroundColor = "#FBE9E9";
     }
+
+    if (loginState.isValid === true) {
+      props.login();
+    }
   }, [loginState]);
+
+  useEffect(() => {
+    if (props.isLoggedIn) {
+      redirectToMainPage();
+    }
+  }, [props]);
 
   // closing pop up modal
   const onCloseModal = () => {
@@ -57,23 +65,14 @@ const Login = (props) => {
   const redirectToRegisterPage = () => {
     navigate("/register");
   };
+
   const redirectToMainPage = () => {
     navigate("/");
   };
+
   const redirectToForgetPasswordPage = () => {
     navigate("/forgetpassword");
   };
-
-  if (loginState.isValid === true) {
-    console.log("Login Successful!");
-    props.login();
-  }
-  if (loginState.message !== "") {
-    console.log(loginState.message);
-  }
-  if (props.isLoggedIn) {
-    redirectToMainPage();
-  }
 
   return (
     <div className="login-container">
@@ -124,14 +123,13 @@ const Login = (props) => {
           </div>
           <br />
           <div className="p-field">
-            {/* <Button label="Login" onClick={props.login} /> */}
-            <Button label="Login" onClick={() => loginHandler()} />
+            <Button
+              label="Login"
+              id="loginBtn"
+              onClick={() => loginHandler()}
+            />
           </div>
           <br />
-          {/* <div className="p-field">
-            {/* <Button label="Login" onClick={props.login} /> */}
-          {/* <Button label="Register" onClick={() => redirectToRegisterPage()} /> */}
-          {/* </div> */}
           <br />
           <hr />
           <br />

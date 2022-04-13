@@ -1,5 +1,4 @@
 // @ts-nocheck
-import "../../styles.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import * as authConstants from "../../constants/authConstants.tsx";
@@ -21,7 +20,7 @@ const Register = (props) => {
   const passwordRef: any = useRef();
   const navigate = useNavigate();
 
-  const initialState: any = { isValid: false, message: "" };
+  const initialState: any = { isValid: false, message: "", feedback: "" };
   const [registerState, registerDispatch] = useReducer(
     authReducer,
     initialState
@@ -48,16 +47,20 @@ const Register = (props) => {
       document.getElementById("password").style.backgroundColor = "#FBE9E9";
       document.getElementById("password").focus();
     }
+    if (registerState.isValid) {
+      props.login();
+    }
   }, [registerState]);
+
+  useEffect(() => {
+    if (props.isLoggedIn) {
+      redirectToLoginPage();
+    }
+  }, [props]);
 
   // closing pop up modal
   const onCloseModal = () => {
     setModalState(false);
-  };
-
-  // opening pop up modal
-  const onOpenModal = () => {
-    setModalState(true);
   };
 
   const redirectToLoginPage = () => {
@@ -75,20 +78,16 @@ const Register = (props) => {
 
   const registerHandler = () => {
     const name = nameRef.current.value;
-    const username = usernameRef.current.value;
+    const userName = usernameRef.current.value;
     const email = emailRef.current.value;
     const contactNumber = contactNumberRef.current.value;
     const password = passwordRef.current.value;
 
     registerDispatch({
       type: authConstants.REGISTER,
-      payload: { name, username, email, contactNumber, password },
+      payload: { name, userName, email, contactNumber, password },
     });
   };
-
-  if (props.isLoggedIn) {
-    redirectToLoginPage();
-  }
 
   return (
     <div className="login-container">
@@ -160,7 +159,6 @@ const Register = (props) => {
           <br />
           <br />
           <div className="p-field">
-            {/* <Button label="Login" onClick={props.login} /> */}
             <Button label="Register" onClick={() => registerHandler()} />
           </div>
           <br />
