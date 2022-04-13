@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React, { useState } from "react";
 import { Routes, Route } from "react-router-dom";
-import './styles.css';
+import "./styles.css";
 
 import Login from "./component/auth/Login.tsx";
 import Register from "./component/auth/Register.tsx";
@@ -35,7 +35,10 @@ const App = () => {
           element={<Login login={loginHandler} isLoggedIn={isLoggedIn} />}
         />
       )}
-      <Route path="/register" element={<Register isLoggedIn={isLoggedIn} />} />
+      <Route
+        path="/register"
+        element={<Register login={loginHandler} isLoggedIn={isLoggedIn} />}
+      />
       <Route
         path="/forgetpassword"
         element={<ForgetPassword isLoggedIn={isLoggedIn} />}

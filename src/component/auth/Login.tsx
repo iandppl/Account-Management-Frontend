@@ -17,7 +17,6 @@ const Login = (props) => {
 
   const initialState = { isValid: false, message: "", feedback: "" };
   const [loginState, loginDispatch] = useReducer(authReducer, initialState);
-
   const [modalState, setModalState] = useState(false);
 
   useEffect(() => {
@@ -26,7 +25,17 @@ const Login = (props) => {
       document.getElementById("username").focus();
       document.getElementById("password").style.backgroundColor = "#FBE9E9";
     }
+
+    if (loginState.isValid === true) {
+      props.login();
+    }
   }, [loginState]);
+
+  useEffect(() => {
+    if (props.isLoggedIn) {
+      redirectToMainPage();
+    }
+  }, [props]);
 
   // closing pop up modal
   const onCloseModal = () => {
@@ -56,27 +65,17 @@ const Login = (props) => {
   const redirectToRegisterPage = () => {
     navigate("/register");
   };
+
   const redirectToMainPage = () => {
     navigate("/");
   };
+
   const redirectToForgetPasswordPage = () => {
     navigate("/forgetpassword");
   };
 
-  if (loginState.isValid === true) {
-    console.log("Login Successful!");
-    props.login();
-  }
-  if (loginState.message !== "") {
-    console.log(loginState.message);
-  }
-  if (props.isLoggedIn) {
-    redirectToMainPage();
-  }
-
   return (
     <div className="login-container">
-      TestingJest
       <Card
         title="Login Page"
         className="login-card p-shadow-24"
@@ -124,14 +123,13 @@ const Login = (props) => {
           </div>
           <br />
           <div className="p-field">
-            {/* <Button label="Login" onClick={props.login} /> */}
-            <Button label="Login" onClick={() => loginHandler()} />
+            <Button
+              label="Login"
+              id="loginBtn"
+              onClick={() => loginHandler()}
+            />
           </div>
           <br />
-          {/* <div className="p-field">
-            {/* <Button label="Login" onClick={props.login} /> */}
-          {/* <Button label="Register" onClick={() => redirectToRegisterPage()} /> */}
-          {/* </div> */}
           <br />
           <hr />
           <br />

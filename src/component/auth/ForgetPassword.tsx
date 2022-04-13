@@ -1,44 +1,64 @@
 // @ts-nocheck
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./authStyles.css";
-// import * as authConstants from "../../constants/authConstants.tsx";
+import * as authConstants from "../../constants/authConstants.tsx";
 import { useNavigate } from "react-router-dom";
 import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
-import { useReducer, useRef, useState } from "react";
+import { useEffect, useReducer, useRef, useState } from "react";
 import { Modal } from "react-bootstrap";
-import loginReducer from "../../reducer/auth/authReducer.tsx";
+import authReducer from "../../reducer/auth/authReducer.tsx";
 
 const ForgetPassword = (props) => {
   const [modalState, setModalState] = useState(false);
 
   const usernameRef: any = useRef();
-  const passwordRef: any = useRef();
   const navigate = useNavigate();
 
-  const initialState: any = { isValid: false, message: "" };
-  const [loginState, loginDispatch] = useReducer(loginReducer, initialState);
+  const initialState: any = { isValid: false, message: "", feedback: "" };
+  const [forgetPasswordState, forgetPasswordDispatch] = useReducer(
+    authReducer,
+    initialState
+  );
+
+  useEffect(() => {
+    if (forgetPasswordState.feedback === "success") {
+      document.getElementById("username").style.backgroundColor = "white";
+    } else {
+      if (forgetPasswordState.message !== "") {
+        document.getElementById("username").style.backgroundColor = "#FBE9E9";
+        document.getElementById("username").focus();
+      }
+    }
+  }, [forgetPasswordState]);
 
   // closing pop up modal
   const onCloseModal = () => {
     setModalState(false);
   };
 
-  // opening pop up modal
-  // const onOpenModal = () => {
-  //   setModalState(true);
-  // };
+  const redirectToMainPage = () => {
+    navigate("/");
+  };
 
-  const loginHandler = () => {
+  const resetHandler = () => {
     const userName = usernameRef.current.value;
-    const password = passwordRef.current.value;
-    loginDispatch({ type: constants.LOGIN, payload: { userName, password } });
+    forgetPasswordDispatch({
+      type: authConstants.RESET_PASSWORD,
+      payload: { userName },
+    });
+  };
+
+  const resetInput = () => {
+    document.getElementById("username").style.backgroundColor = "white";
+    forgetPasswordDispatch({ type: authConstants.RESET_INPUT });
   };
 
   if (props.isLoggedIn) {
     navigate("/");
   }
+
   return (
     <div className="login-container">
       <Card
@@ -51,51 +71,37 @@ const ForgetPassword = (props) => {
           <div className="p-field">
             <InputText
               id="username"
-              type="username"
+              type="text"
               placeholder="Username or E-Mail"
               ref={usernameRef}
-            />
-          </div>
-          <div className="login-form-between-padding"></div>
-          <div className="p-field">
-            <InputText
-              id="password"
-              type="password"
-              placeholder="Password"
-              ref={passwordRef}
+              onKeyDown={() => resetInput()}
             />
             <br />
             <br />
             <div
-              style={loginState.isValid ? { color: "black" } : { color: "red" }}
+              style={
+                forgetPasswordState.isValid
+                  ? { color: "black" }
+                  : { color: "red" }
+              }
             >
-              {loginState.message}
+              {forgetPasswordState.message}
             </div>
           </div>
           <br />
           <div className="p-field">
-            {/* <Button label="Login" onClick={props.login} /> */}
-            <Button label="Login" onClick={() => loginHandler()} />
+            <Button label="Reset Password" onClick={() => resetHandler()} />
           </div>
           <br />
+          <hr />
           <div className="p-field">
-            {/* <Button label="Login" onClick={props.login} /> */}
-            <Button label="Register" onClick={() => redirectToRegisterPage()} />
-          </div>
-          {/* <div className="p-field">
-            <Link
-              className="p-button"
-              style={{
-                display: "block",
-                margin: "1rem 0",
-                fontWeight: "Bold",
-                textDecoration: "none",
-              }}
-              to={`/register`}
+            <span
+              onClick={() => redirectToMainPage()}
+              style={{ cursor: "pointer" }}
             >
-              Register
-            </Link>
-          </div> */}
+              Go back
+            </span>
+          </div>
         </div>
       </Card>
 
