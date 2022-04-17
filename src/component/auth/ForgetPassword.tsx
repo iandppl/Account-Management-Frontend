@@ -43,10 +43,10 @@ const ForgetPassword = (props) => {
   };
 
   const resetHandler = () => {
-    const userName = usernameRef.current.value;
+    const username = usernameRef.current.value;
     forgetPasswordDispatch({
       type: authConstants.RESET_PASSWORD,
-      payload: { userName },
+      payload: { username },
     });
   };
 
@@ -72,7 +72,7 @@ const ForgetPassword = (props) => {
             <InputText
               id="username"
               type="text"
-              placeholder="Username or E-Mail"
+              placeholder="username or E-Mail"
               ref={usernameRef}
               onKeyDown={() => resetInput()}
             />

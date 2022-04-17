@@ -78,14 +78,14 @@ const Register = (props) => {
 
   const registerHandler = () => {
     const name = nameRef.current.value;
-    const userName = usernameRef.current.value;
+    const username = usernameRef.current.value;
     const email = emailRef.current.value;
     const contactNumber = contactNumberRef.current.value;
     const password = passwordRef.current.value;
 
     registerDispatch({
       type: authConstants.REGISTER,
-      payload: { name, userName, email, contactNumber, password },
+      payload: { name, username, email, contactNumber, password },
     });
   };
 
@@ -112,7 +112,7 @@ const Register = (props) => {
             <InputText
               id="username"
               type="username"
-              placeholder="Username"
+              placeholder="username"
               ref={usernameRef}
               onKeyDown={() => resetInput()}
             />

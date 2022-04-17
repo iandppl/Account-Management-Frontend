@@ -22,7 +22,6 @@ const Login = (props) => {
   useEffect(() => {
     if (loginState.message !== "") {
       document.getElementById("username").style.backgroundColor = "#FBE9E9";
-      document.getElementById("username").focus();
       document.getElementById("password").style.backgroundColor = "#FBE9E9";
     }
 
@@ -54,11 +53,11 @@ const Login = (props) => {
   };
 
   const loginHandler = () => {
-    const userName = usernameRef.current.value;
+    const username = usernameRef.current.value;
     const password = passwordRef.current.value;
     loginDispatch({
       type: authConstants.LOGIN,
-      payload: { userName, password },
+      payload: { username, password },
     });
   };
 
@@ -87,7 +86,7 @@ const Login = (props) => {
             <InputText
               id="username"
               type="username"
-              placeholder="Username or E-Mail"
+              placeholder="username or E-Mail"
               ref={usernameRef}
               onKeyDown={() => resetInput()}
             />
