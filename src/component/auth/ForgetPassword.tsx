@@ -72,7 +72,7 @@ const ForgetPassword = (props) => {
             <InputText
               id="username"
               type="text"
-              placeholder="username or E-Mail"
+              placeholder="Username or E-Mail"
               ref={usernameRef}
               onKeyDown={() => resetInput()}
             />

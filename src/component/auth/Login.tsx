@@ -6,7 +6,13 @@ import { useNavigate } from "react-router-dom";
 import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
-import React, { useEffect, useReducer, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+} from "react";
 import { Modal } from "react-bootstrap";
 import authReducer from "../../reducer/auth/authReducer.tsx";
 import { BOOLEAN_FALSE } from "../../constants/authConstants";
@@ -28,17 +34,18 @@ const Login = (props) => {
     if (loginState.isValid) {
       props.login();
     }
-  }, [loginState]);
+  }, [loginState, props]);
+
+  const redirectToMainPage = useCallback(() => {
+    navigate("/");
+  }, [navigate]);
 
   useEffect(() => {
     if (props.isLoggedIn) {
       redirectToMainPage();
     }
-  }, [props]);
+  }, [props, redirectToMainPage]);
 
-  const redirectToMainPage = () => {
-    navigate("/");
-  };
   // closing pop up modal
   const onCloseModal = () => {
     setModalState(false);

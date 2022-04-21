@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
-import { useEffect, useReducer, useRef, useState } from "react";
+import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { Modal } from "react-bootstrap";
 import authReducer from "../../reducer/auth/authReducer.tsx";
 import { BOOLEAN_FALSE } from "../../constants/authConstants";
@@ -57,15 +57,15 @@ const Register = (props) => {
     }
   }, [registerState, props]);
 
-  const redirectToLoginPage = () => {
+  const redirectToLoginPage = useCallback(() => {
     navigate("/");
-  };
+  }, [navigate]);
 
   useEffect(() => {
     if (props.isLoggedIn) {
       redirectToLoginPage();
     }
-  }, [props]);
+  }, [props, redirectToLoginPage]);
 
   // closing pop up modal
   const onCloseModal = () => {
