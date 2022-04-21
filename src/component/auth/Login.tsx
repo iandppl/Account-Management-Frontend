@@ -6,22 +6,17 @@ import { useNavigate } from "react-router-dom";
 import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
-import React, {
-  useCallback,
-  useEffect,
-  useReducer,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useReducer, useRef, useState } from "react";
 import { Modal } from "react-bootstrap";
 import authReducer from "../../reducer/auth/authReducer.tsx";
+import { BOOLEAN_FALSE } from "../../constants/authConstants";
 
 const Login = (props) => {
   const usernameRef = useRef();
   const passwordRef = useRef();
   const navigate = useNavigate();
 
-  const initialState = { isValid: false, message: "", feedback: "" };
+  const initialState = { isValid: BOOLEAN_FALSE, message: "", feedback: "" };
   const [loginState, loginDispatch] = useReducer(authReducer, initialState);
   const [modalState, setModalState] = useState(false);
 
@@ -30,21 +25,20 @@ const Login = (props) => {
       document.getElementById("username").style.backgroundColor = "#FBE9E9";
       document.getElementById("password").style.backgroundColor = "#FBE9E9";
     }
-    if (loginState.isValid === true) {
+    if (loginState.isValid) {
       props.login();
     }
-  }, [loginState, props]);
-
-  const redirectToMainPage = useCallback(() => {
-    navigate("/");
-  }, [navigate]);
+  }, [loginState]);
 
   useEffect(() => {
     if (props.isLoggedIn) {
       redirectToMainPage();
     }
-  }, [props, redirectToMainPage]);
+  }, [props]);
 
+  const redirectToMainPage = () => {
+    navigate("/");
+  };
   // closing pop up modal
   const onCloseModal = () => {
     setModalState(false);

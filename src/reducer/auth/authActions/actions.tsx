@@ -4,12 +4,14 @@ import {
   EMAIL,
   PASSWORD,
   CONTACT_NUMBER,
+  SUCCESS,
   UNSUCCESSFUL,
   UNSUCCESSFUL_EMAIL,
   UNSUCCESSFUL_USERNAME,
   INVALID_EMAIL,
   INVALID_USERNAME_EMAIL,
   VALID_USERNAME_EMAIL,
+  BOOLEAN_TRUE,
 } from "../../../constants/authConstants";
 
 export const isInputEmail = (username: string) => {
@@ -42,79 +44,86 @@ export const validContactNumberCheck = (contactNumber: string) => {
   return /^\d{8}$/.test(contactNumber);
 };
 
-export const getAuthErrorMessage = (type: string) => {
+export const getAuthErrorMessage = (state: any, type: string) => {
   switch (type) {
     case NAME:
       return {
-        isValid: false,
+        ...state,
         message: "Please enter your name",
         feedback: "name",
       };
     case USERNAME:
       return {
-        isValid: false,
+        ...state,
         message: "Please enter your username",
         feedback: "username",
       };
     case EMAIL:
       return {
-        isValid: false,
+        ...state,
         message: "Please enter a valid email",
         feedback: "email",
       };
     case PASSWORD:
       return {
-        isValid: false,
+        ...state,
         message:
           "Password should contain at least 1 lowercase, 1 uppercase, 1 digit, 1 special character, and at least 8 characters long",
         feedback: "password",
       };
     case CONTACT_NUMBER:
       return {
-        isValid: false,
+        ...state,
         message: "Please enter a valid contact number",
         feedback: "contactNumber",
       };
     case UNSUCCESSFUL:
       return {
-        isValid: false,
+        ...state,
         message: "",
         feedback: "",
       };
     case UNSUCCESSFUL_USERNAME:
       return {
-        isValid: false,
+        ...state,
         message: "Invalid username or password",
         feedback: "",
       };
     case UNSUCCESSFUL_EMAIL:
       return {
-        isValid: false,
+        ...state,
         message: "Invalid e-mail or password",
         feedback: "",
       };
     case INVALID_EMAIL:
       return {
-        isValid: false,
+        ...state,
         message: "You have entered an invalid E-Mail",
         feedback: "",
       };
     case INVALID_USERNAME_EMAIL:
       return {
-        isValid: false,
+        ...state,
         message: "Please enter a valid username or E-Mail",
         feedback: "",
       };
     case VALID_USERNAME_EMAIL:
       return {
-        isValid: true,
+        isValid: BOOLEAN_TRUE,
         message: "Please check your email to reset your password",
         feedback: "success",
       };
+    case SUCCESS:
+      return {
+        isValid: BOOLEAN_TRUE,
+        message: "",
+        feedback: "",
+      };
     default:
       return {
-        isValid: true,
+        ...state,
         message: "",
+        feedback: "",
       };
   }
 };

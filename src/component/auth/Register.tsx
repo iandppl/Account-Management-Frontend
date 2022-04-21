@@ -6,9 +6,10 @@ import { useNavigate } from "react-router-dom";
 import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
-import { useCallback, useEffect, useReducer, useRef, useState } from "react";
+import { useEffect, useReducer, useRef, useState } from "react";
 import { Modal } from "react-bootstrap";
 import authReducer from "../../reducer/auth/authReducer.tsx";
+import { BOOLEAN_FALSE } from "../../constants/authConstants";
 
 const Register = (props) => {
   const [modalState, setModalState] = useState(false);
@@ -20,7 +21,11 @@ const Register = (props) => {
   const passwordRef: any = useRef();
   const navigate = useNavigate();
 
-  const initialState: any = { isValid: false, message: "", feedback: "" };
+  const initialState: any = {
+    isValid: BOOLEAN_FALSE,
+    message: "",
+    feedback: "",
+  };
   const [registerState, registerDispatch] = useReducer(
     authReducer,
     initialState
@@ -52,15 +57,15 @@ const Register = (props) => {
     }
   }, [registerState, props]);
 
-  const redirectToLoginPage = useCallback(() => {
+  const redirectToLoginPage = () => {
     navigate("/");
-  }, [navigate]);
+  };
 
   useEffect(() => {
     if (props.isLoggedIn) {
       redirectToLoginPage();
     }
-  }, [props, redirectToLoginPage]);
+  }, [props]);
 
   // closing pop up modal
   const onCloseModal = () => {

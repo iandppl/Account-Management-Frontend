@@ -36,9 +36,9 @@ const loginReducer = (state, action) => {
           validEmailCheck(action.payload.username) &&
           passwordComplexityCheck(action.payload.password)
         ) {
-          return getAuthErrorMessage(SUCCESS);
+          return getAuthErrorMessage(state, SUCCESS);
         } else {
-          return getAuthErrorMessage(UNSUCCESSFUL_EMAIL);
+          return getAuthErrorMessage(state, UNSUCCESSFUL_EMAIL);
         }
       } else {
         //login by username
@@ -46,9 +46,9 @@ const loginReducer = (state, action) => {
           validUsernameCheck(action.payload.username) &&
           passwordComplexityCheck(action.payload.password)
         ) {
-          return getAuthErrorMessage(SUCCESS);
+          return getAuthErrorMessage(state, SUCCESS);
         } else {
-          return getAuthErrorMessage(UNSUCCESSFUL_USERNAME);
+          return getAuthErrorMessage(state, UNSUCCESSFUL_USERNAME);
         }
       }
     case REGISTER:
@@ -60,46 +60,46 @@ const loginReducer = (state, action) => {
         validContactNumberCheck(action.payload.contactNumber) &&
         passwordComplexityCheck(action.payload.password)
       ) {
-        return getAuthErrorMessage(SUCCESS);
+        return getAuthErrorMessage(state, SUCCESS);
       } else {
         // FAILURE CASE
         if (!validNameCheck(action.payload.name)) {
-          return getAuthErrorMessage(NAME);
+          return getAuthErrorMessage(state, NAME);
         }
         if (!validUsernameCheck(action.payload.username)) {
-          return getAuthErrorMessage(USERNAME);
+          return getAuthErrorMessage(state, USERNAME);
         }
         if (!validEmailCheck(action.payload.email)) {
-          return getAuthErrorMessage(EMAIL);
+          return getAuthErrorMessage(state, EMAIL);
         }
         if (!validContactNumberCheck(action.payload.contactNumber)) {
-          return getAuthErrorMessage(CONTACT_NUMBER);
+          return getAuthErrorMessage(state, CONTACT_NUMBER);
         }
         if (!passwordComplexityCheck(action.payload.password)) {
-          return getAuthErrorMessage(PASSWORD);
+          return getAuthErrorMessage(state, PASSWORD);
         }
       }
       break;
     case RESET_PASSWORD:
       if (isInputEmail(action.payload.username)) {
         if (validEmailCheck(action.payload.email)) {
-          return getAuthErrorMessage(VALID_USERNAME_EMAIL);
+          return getAuthErrorMessage(state, VALID_USERNAME_EMAIL);
         } else {
-          return getAuthErrorMessage(INVALID_EMAIL);
+          return getAuthErrorMessage(state, INVALID_EMAIL);
         }
       } else {
         if (validUsernameCheck(action.payload.username)) {
-          return getAuthErrorMessage(VALID_USERNAME_EMAIL);
+          return getAuthErrorMessage(state, VALID_USERNAME_EMAIL);
         } else {
-          return getAuthErrorMessage(INVALID_USERNAME_EMAIL);
+          return getAuthErrorMessage(state, INVALID_USERNAME_EMAIL);
         }
       }
 
     case RESET_INPUT:
-      return getAuthErrorMessage(UNSUCCESSFUL);
+      return getAuthErrorMessage(state, UNSUCCESSFUL);
 
     default:
-      return getAuthErrorMessage(UNSUCCESSFUL);
+      return getAuthErrorMessage(state, UNSUCCESSFUL);
   }
 };
 
