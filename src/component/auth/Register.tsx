@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
-import { useEffect, useReducer, useRef, useState } from "react";
+import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { Modal } from "react-bootstrap";
 import authReducer from "../../reducer/auth/authReducer.tsx";
 
@@ -50,21 +50,21 @@ const Register = (props) => {
     if (registerState.isValid) {
       props.login();
     }
-  }, [registerState]);
+  }, [registerState, props]);
+
+  const redirectToLoginPage = useCallback(() => {
+    navigate("/");
+  }, [navigate]);
 
   useEffect(() => {
     if (props.isLoggedIn) {
       redirectToLoginPage();
     }
-  }, [props]);
+  }, [props, redirectToLoginPage]);
 
   // closing pop up modal
   const onCloseModal = () => {
     setModalState(false);
-  };
-
-  const redirectToLoginPage = () => {
-    navigate("/");
   };
 
   const resetInput = () => {
@@ -78,14 +78,14 @@ const Register = (props) => {
 
   const registerHandler = () => {
     const name = nameRef.current.value;
-    const userName = usernameRef.current.value;
+    const username = usernameRef.current.value;
     const email = emailRef.current.value;
     const contactNumber = contactNumberRef.current.value;
     const password = passwordRef.current.value;
 
     registerDispatch({
       type: authConstants.REGISTER,
-      payload: { name, userName, email, contactNumber, password },
+      payload: { name, username, email, contactNumber, password },
     });
   };
 

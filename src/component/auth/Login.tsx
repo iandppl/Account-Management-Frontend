@@ -6,7 +6,13 @@ import { useNavigate } from "react-router-dom";
 import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
-import React, { useEffect, useReducer, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+} from "react";
 import { Modal } from "react-bootstrap";
 import authReducer from "../../reducer/auth/authReducer.tsx";
 
@@ -22,29 +28,26 @@ const Login = (props) => {
   useEffect(() => {
     if (loginState.message !== "") {
       document.getElementById("username").style.backgroundColor = "#FBE9E9";
-      document.getElementById("username").focus();
       document.getElementById("password").style.backgroundColor = "#FBE9E9";
     }
-
     if (loginState.isValid === true) {
       props.login();
     }
-  }, [loginState]);
+  }, [loginState, props]);
+
+  const redirectToMainPage = useCallback(() => {
+    navigate("/");
+  }, [navigate]);
 
   useEffect(() => {
     if (props.isLoggedIn) {
       redirectToMainPage();
     }
-  }, [props]);
+  }, [props, redirectToMainPage]);
 
   // closing pop up modal
   const onCloseModal = () => {
     setModalState(false);
-  };
-
-  // opening pop up modal
-  const onOpenModal = () => {
-    setModalState(true);
   };
 
   const resetInput = () => {
@@ -54,20 +57,16 @@ const Login = (props) => {
   };
 
   const loginHandler = () => {
-    const userName = usernameRef.current.value;
+    const username = usernameRef.current.value;
     const password = passwordRef.current.value;
     loginDispatch({
       type: authConstants.LOGIN,
-      payload: { userName, password },
+      payload: { username, password },
     });
   };
 
   const redirectToRegisterPage = () => {
     navigate("/register");
-  };
-
-  const redirectToMainPage = () => {
-    navigate("/");
   };
 
   const redirectToForgetPasswordPage = () => {
