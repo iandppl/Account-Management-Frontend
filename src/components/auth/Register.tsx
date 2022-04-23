@@ -1,75 +1,54 @@
 // @ts-nocheck
 import "bootstrap/dist/css/bootstrap.min.css";
-
-import * as authConstants from "../../constants/authConstants.tsx";
+import "./css/authStyles.css";
 import { useNavigate } from "react-router-dom";
 import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
-import { useCallback, useEffect, useReducer, useRef, useState } from "react";
-import { Modal } from "react-bootstrap";
-import authReducer from "../../reducer/auth/authReducer.tsx";
-import { BOOLEAN_FALSE } from "../../constants/authConstants";
+import { useEffect, useRef, } from "react";
 
-const Register = (props) => {
-  const [modalState, setModalState] = useState(false);
+import { useDispatch, useSelector } from 'react-redux';
+import { authActions } from '../../store/slices/auth/reducer';
 
+const Register = () => {
+  const authState = useSelector(state => state.auth);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const nameRef: any = useRef();
   const usernameRef: any = useRef();
   const emailRef: any = useRef();
   const contactNumberRef: any = useRef();
   const passwordRef: any = useRef();
-  const navigate = useNavigate();
-
-  const initialState: any = {
-    isValid: BOOLEAN_FALSE,
-    message: "",
-    feedback: "",
-  };
-  const [registerState, registerDispatch] = useReducer(
-    authReducer,
-    initialState
-  );
 
   useEffect(() => {
-    if (registerState.feedback === "name") {
+    if (authState.remarks === "name") {
       document.getElementById("name").style.backgroundColor = "#FBE9E9";
       document.getElementById("name").focus();
     }
-    if (registerState.feedback === "username") {
+    if (authState.remarks === "username") {
       document.getElementById("username").style.backgroundColor = "#FBE9E9";
       document.getElementById("username").focus();
     }
-    if (registerState.feedback === "email") {
+    if (authState.remarks === "email") {
       document.getElementById("email").style.backgroundColor = "#FBE9E9";
       document.getElementById("email").focus();
     }
-    if (registerState.feedback === "contactNumber") {
+    if (authState.remarks === "contactNumber") {
       document.getElementById("contact").style.backgroundColor = "#FBE9E9";
       document.getElementById("contact").focus();
     }
-    if (registerState.feedback === "password") {
+    if (authState.remarks === "password") {
       document.getElementById("password").style.backgroundColor = "#FBE9E9";
       document.getElementById("password").focus();
     }
-    if (registerState.isValid) {
-      props.login();
-    }
-  }, [registerState, props]);
 
-  const redirectToLoginPage = useCallback(() => {
+    return () => {
+      
+    };
+  }, [authState]);
+
+  const redirectToLoginPage = () => {
     navigate("/");
-  }, [navigate]);
-
-  useEffect(() => {
-    if (props.isLoggedIn) {
-      redirectToLoginPage();
-    }
-  }, [props, redirectToLoginPage]);
-
-  // closing pop up modal
-  const onCloseModal = () => {
-    setModalState(false);
   };
 
   const resetInput = () => {
@@ -78,7 +57,7 @@ const Register = (props) => {
     document.getElementById("email").style.backgroundColor = "white";
     document.getElementById("contact").style.backgroundColor = "white";
     document.getElementById("password").style.backgroundColor = "white";
-    registerDispatch({ type: authConstants.RESET_INPUT });
+    dispatch(authActions.resetInput())
   };
 
   const registerHandler = () => {
@@ -87,12 +66,12 @@ const Register = (props) => {
     const email = emailRef.current.value;
     const contactNumber = contactNumberRef.current.value;
     const password = passwordRef.current.value;
-
-    registerDispatch({
-      type: authConstants.REGISTER,
-      payload: { name, username, email, contactNumber, password },
-    });
+    dispatch(authActions.register({ name, username, email, contactNumber, password }));
   };
+
+  if (authState.isAuthenticated) {
+    redirectToLoginPage();
+  }
 
   return (
     <div className="login-container">
@@ -156,10 +135,10 @@ const Register = (props) => {
           <br />
           <div
             style={
-              registerState.isValid ? { color: "black" } : { color: "red" }
+              authState.isAuthenticated ? { color: "black" } : { color: "red" }
             }
           >
-            {registerState.message}
+            {authState.message}
           </div>
           <br />
           <br />
@@ -181,27 +160,6 @@ const Register = (props) => {
           </div>
         </div>
       </Card>
-
-      {/* pop up model */}
-      <Modal
-        show={modalState}
-        onHide={() => onCloseModal()}
-        backdrop="static"
-        keyboard={false}
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Forget Password</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => onCloseModal()}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={() => onCloseModal()}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </div>
   );
 };

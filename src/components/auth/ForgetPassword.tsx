@@ -1,63 +1,48 @@
 // @ts-nocheck
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./authStyles.css";
-import * as authConstants from "../../constants/authConstants.tsx";
+import "./css/authStyles.css";
 import { useNavigate } from "react-router-dom";
 import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
-import { useEffect, useReducer, useRef, useState } from "react";
-import { Modal } from "react-bootstrap";
-import authReducer from "../../reducer/auth/authReducer.tsx";
+import { useEffect, useRef } from "react";
+import { useDispatch } from "react-redux";
+import { authActions } from '../../store/slices/auth/reducer';
+import { useSelector } from "react-redux";
+import { SUCCESS } from "../../constants/authConstants";
 
-const ForgetPassword = (props) => {
-  const [modalState, setModalState] = useState(false);
-
-  const usernameRef: any = useRef();
+const ForgetPassword = () => {
+  const authState = useSelector(state => state.auth);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const usernameRef: any = useRef();
 
-  const initialState: any = { isValid: false, message: "", feedback: "" };
-  const [forgetPasswordState, forgetPasswordDispatch] = useReducer(
-    authReducer,
-    initialState
-  );
 
   useEffect(() => {
-    if (forgetPasswordState.feedback === "success") {
+    if (authState.remarks === SUCCESS) {
       document.getElementById("username").style.backgroundColor = "white";
     } else {
-      if (forgetPasswordState.message !== "") {
+      if (authState.message !== "") {
         document.getElementById("username").style.backgroundColor = "#FBE9E9";
         document.getElementById("username").focus();
       }
     }
-  }, [forgetPasswordState]);
-
-  // closing pop up modal
-  const onCloseModal = () => {
-    setModalState(false);
-  };
+  }, [authState]);
 
   const redirectToMainPage = () => {
+    dispatch(authActions.resetInput());
     navigate("/");
   };
 
   const resetHandler = () => {
     const username = usernameRef.current.value;
-    forgetPasswordDispatch({
-      type: authConstants.RESET_PASSWORD,
-      payload: { username },
-    });
+    dispatch(authActions.resetPassword({ username }));
   };
 
   const resetInput = () => {
     document.getElementById("username").style.backgroundColor = "white";
-    forgetPasswordDispatch({ type: authConstants.RESET_INPUT });
+    dispatch(authActions.resetInput());
   };
-
-  if (props.isLoggedIn) {
-    navigate("/");
-  }
 
   return (
     <div className="login-container">
@@ -80,12 +65,12 @@ const ForgetPassword = (props) => {
             <br />
             <div
               style={
-                forgetPasswordState.isValid
+                (authState.remarks === SUCCESS)
                   ? { color: "black" }
                   : { color: "red" }
               }
             >
-              {forgetPasswordState.message}
+              {authState.message}
             </div>
           </div>
           <br />
@@ -104,27 +89,6 @@ const ForgetPassword = (props) => {
           </div>
         </div>
       </Card>
-
-      {/* pop up model */}
-      <Modal
-        show={modalState}
-        onHide={() => onCloseModal()}
-        backdrop="static"
-        keyboard={false}
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Forget Password</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => onCloseModal()}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={() => onCloseModal()}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </div>
   );
 };

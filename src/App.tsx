@@ -1,47 +1,43 @@
 // @ts-nocheck
-import React, { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import "./styles.css";
 
-import Login from "./component/auth/Login.tsx";
-import Register from "./component/auth/Register.tsx";
-import ForgetPassword from "./component/auth/ForgetPassword.tsx";
-import HomePage from "./component/HomePage.tsx";
+import Login from "./components/auth/Login.tsx";
+import Register from "./components/auth/Register.tsx";
+import ForgetPassword from "./components/auth/ForgetPassword.tsx";
+import HomePage from "./components/HomePage.tsx";
 
 // themes from prime react
 import "primereact/resources/themes/lara-light-indigo/theme.css"; //theme
 import "primereact/resources/primereact.min.css"; //core css
 import "primeicons/primeicons.css";
+import { useSelector } from "react-redux";
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const loginHandler = () => {
-    setIsLoggedIn(true);
-  };
-  const logoutHandler = () => {
-    setIsLoggedIn(false);
-  };
+  // global state of auth
+  const isAuth = useSelector(state => state.auth.isAuthenticated);
+
   return (
     <Routes>
-      {isLoggedIn ? (
+      {isAuth ? (
         <Route
           path="/"
-          element={<HomePage logout={logoutHandler} isLoggedIn={isLoggedIn} />}
+          element={<HomePage />}
         />
       ) : (
         <Route
           path="/"
-          element={<Login login={loginHandler} isLoggedIn={isLoggedIn} />}
+          element={<Login />}
         />
       )}
       <Route
         path="/register"
-        element={<Register login={loginHandler} isLoggedIn={isLoggedIn} />}
+        element={<Register />}
       />
       <Route
         path="/forgetpassword"
-        element={<ForgetPassword isLoggedIn={isLoggedIn} />}
+        element={<ForgetPassword />}
       />
     </Routes>
   );

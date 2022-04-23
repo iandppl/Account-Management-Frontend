@@ -12,6 +12,8 @@ import {
   INVALID_USERNAME_EMAIL,
   VALID_USERNAME_EMAIL,
   BOOLEAN_TRUE,
+  LOGOUT,
+  BOOLEAN_FALSE,
 } from "../../../constants/authConstants";
 
 export const isInputEmail = (username: string) => {
@@ -50,80 +52,86 @@ export const getAuthErrorMessage = (state: any, type: string) => {
       return {
         ...state,
         message: "Please enter your name",
-        feedback: "name",
+        remarks: "name",
       };
     case USERNAME:
       return {
         ...state,
         message: "Please enter your username",
-        feedback: "username",
+        remarks: "username",
       };
     case EMAIL:
       return {
         ...state,
         message: "Please enter a valid email",
-        feedback: "email",
+        remarks: "email",
       };
     case PASSWORD:
       return {
         ...state,
         message:
           "Password should contain at least 1 lowercase, 1 uppercase, 1 digit, 1 special character, and at least 8 characters long",
-        feedback: "password",
+        remarks: "password",
       };
     case CONTACT_NUMBER:
       return {
         ...state,
         message: "Please enter a valid contact number",
-        feedback: "contactNumber",
+        remarks: "contactNumber",
       };
     case UNSUCCESSFUL:
       return {
         ...state,
         message: "",
-        feedback: "",
+        remarks: "",
       };
     case UNSUCCESSFUL_USERNAME:
       return {
         ...state,
         message: "Invalid username or password",
-        feedback: "",
+        remarks: "",
       };
     case UNSUCCESSFUL_EMAIL:
       return {
         ...state,
         message: "Invalid e-mail or password",
-        feedback: "",
+        remarks: "",
       };
     case INVALID_EMAIL:
       return {
         ...state,
         message: "You have entered an invalid E-Mail",
-        feedback: "",
+        remarks: "",
       };
     case INVALID_USERNAME_EMAIL:
       return {
         ...state,
         message: "Please enter a valid username or E-Mail",
-        feedback: "",
+        remarks: "",
       };
     case VALID_USERNAME_EMAIL:
       return {
-        isValid: BOOLEAN_TRUE,
+        ...state,
         message: "Please check your email to reset your password",
-        feedback: "success",
+        remarks: SUCCESS,
       };
     case SUCCESS:
       return {
-        isValid: BOOLEAN_TRUE,
+        isAuthenticated: BOOLEAN_TRUE,
         message: "",
-        feedback: "",
+        remarks: "",
       };
+    case LOGOUT:
+      return {
+        isAuthenticated: BOOLEAN_FALSE,
+        message: "",
+        remarks: "",
+      }
     default:
       return {
         ...state,
         message: "",
-        feedback: "",
+        remarks: "",
       };
   }
 };
