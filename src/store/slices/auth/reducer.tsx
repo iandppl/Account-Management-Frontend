@@ -24,7 +24,7 @@ import {
     validNameCheck,
     getAuthErrorMessage,
 } from "../../actions/auth/validationCheck";
-import { initialStateModel } from '../../../models/model';
+import { initialStateModel } from '../../../models/authModel';
 
 const initialAuthState: initialStateModel = {
     isAuthenticated: BOOLEAN_FALSE,
