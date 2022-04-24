@@ -25,6 +25,8 @@ import {
     getAuthErrorMessage,
 } from "../../actions/auth/validationCheck";
 import { initialStateModel } from '../../../models/authModel';
+import { loginByUsername } from './service';
+
 
 const initialAuthState: initialStateModel = {
     isAuthenticated: BOOLEAN_FALSE,
@@ -53,6 +55,7 @@ const authSlice = createSlice({
                     passwordComplexityCheck(action.payload.password)
                 ) {
                     result = getAuthErrorMessage(state, SUCCESS);
+                    loginByUsername(action.payload.username, action.payload.password);
                 } else {
                     result = getAuthErrorMessage(state, UNSUCCESSFUL_USERNAME);
                 }
