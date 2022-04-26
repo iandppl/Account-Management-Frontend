@@ -25,7 +25,9 @@ import {
     getAuthErrorMessage,
 } from "../../actions/auth/validationCheck";
 import { initialStateModel } from '../../../models/authModel';
-import { loginByUsername } from './service';
+import { loginByUsername } from './services/loginService';
+import { register } from './services/registerService';
+import { json } from 'stream/consumers';
 
 
 const initialAuthState: initialStateModel = {
@@ -72,7 +74,29 @@ const authSlice = createSlice({
                 validContactNumberCheck(action.payload.contactNumber) &&
                 passwordComplexityCheck(action.payload.password)
             ) {
-                result = getAuthErrorMessage(state, SUCCESS);
+                let res: any;
+                let resData: any;
+                const test = async () => {
+                    let testv = await register(action.payload.name, action.payload.username, action.payload.password, action.payload.email, action.payload.contactNumber);
+                    console.log("reply", testv.json().then((data: any) => {
+                        resData = data
+                        console.log(resData)
+                    }))
+                    console.log("reply2", testv)
+                    res = testv;
+                }
+                test();
+                if (res && res.status === 200) {
+                    result = getAuthErrorMessage(state, SUCCESS);
+                }
+                if (res && res.status === 500) {
+                    result = {
+                        isAuthenticated: BOOLEAN_FALSE,
+                        message: "not available",
+                        remarks: ''
+                    }
+                }
+
             } else {
                 if (!passwordComplexityCheck(action.payload.password)) {
                     result = getAuthErrorMessage(state, PASSWORD);

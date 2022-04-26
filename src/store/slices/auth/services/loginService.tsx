@@ -1,9 +1,14 @@
-const DEFAULT_URL = 'https://jsonplaceholder.typicode.com/';
+const DEFAULT_URL = 'http://localhost:8080/';
 
 export const loginByUsername = (username: string, password: string) => {
-    fetch(DEFAULT_URL + 'todos/1')
-        .then(response => response.json())
-        .then(data => console.log(data))
+    try {
+        fetch(DEFAULT_URL + 'api/appuser/')
+            .then(response => response.json()
+                .then(data => console.log(data)))
+            .catch(error => console.log(error))
+    } catch (error) {
+        console.log("error:", error)
+    }
 }
 
 export const loginByEmail = (email: string, password: string) => {
