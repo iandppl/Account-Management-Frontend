@@ -1,50 +1,45 @@
 // @ts-nocheck
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./css/authStyles.css";
+// import "./css/authStyles.css";
 import { useNavigate } from "react-router-dom";
 import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
-import { useEffect, useRef } from "react";
-import { useDispatch } from "react-redux";
-import { authActions } from '../../store/slices/auth/reducer';
-import { useSelector } from "react-redux";
+import { useRef, useState } from "react";
+import { login } from "./Login.actions";
 
-const Login = (props) => {
-  const dispatch = useDispatch();
-  const authState = useSelector(state => state.auth);
-
+const Login = () => {
+  const [errorMessage, setErrorMessage] = useState("");
   const usernameRef = useRef();
   const passwordRef = useRef();
   const navigate = useNavigate();
 
-
-  useEffect(() => {
-    if (authState.message !== "") {
-      document.getElementById("username").style.backgroundColor = "#FBE9E9";
-      document.getElementById("password").style.backgroundColor = "#FBE9E9";
-    }
-  }, [authState]);
-
   const resetInput = () => {
     document.getElementById("username").style.backgroundColor = "white";
     document.getElementById("password").style.backgroundColor = "white";
-    dispatch(authActions.resetInput());
+    setErrorMessage("");
   };
 
   const loginHandler = () => {
     const username = usernameRef.current.value;
     const password = passwordRef.current.value;
-    dispatch(authActions.login({ username, password }))
+    try {
+      login(username, password);
+    } catch (err) {
+      setErrorMessage(err.message);
+      document.getElementById("username").style.backgroundColor = "#FBE9E9";
+      document.getElementById("password").style.backgroundColor = "#FBE9E9";
+      document.getElementById("username").focus();
+    }
   };
 
   const redirectToRegisterPage = () => {
-    dispatch(authActions.resetInput());
+    resetInput();
     navigate("/register");
   };
 
   const redirectToForgetPasswordPage = () => {
-    dispatch(authActions.resetInput());
+    resetInput();
     navigate("/forgetpassword");
   };
 
@@ -89,11 +84,7 @@ const Login = (props) => {
             <br />
             <br />
             <br />
-            <div
-              style={authState.isAuthenticated ? { color: "black" } : { color: "red" }}
-            >
-              {authState.message}
-            </div>
+            <div style={{ color: "red" }}>{errorMessage}</div>
           </div>
           <br />
           <div className="p-field">

@@ -1,17 +1,25 @@
 // @ts-nocheck
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./css/authStyles.css";
+// import "./css/authStyles.css";
 import { useNavigate } from "react-router-dom";
 import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
-import { useEffect, useRef, } from "react";
-
-import { useDispatch, useSelector } from 'react-redux';
-import { authActions } from '../../store/slices/auth/reducer';
+import { useRef, useState } from "react";
+import { useDispatch } from "react-redux";
+import { register } from "./Register.actions";
+import {
+  CONTACT_NUMBER,
+  EMAIL,
+  NAME,
+  PASSWORD,
+  USERNAME,
+} from "../../../constants/authConstants";
+import { authActions } from "../../../store/slices/authenticationSlice";
 
 const Register = () => {
-  const authState = useSelector(state => state.auth);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isError, setIsError] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const nameRef: any = useRef();
@@ -19,33 +27,6 @@ const Register = () => {
   const emailRef: any = useRef();
   const contactNumberRef: any = useRef();
   const passwordRef: any = useRef();
-
-  useEffect(() => {
-    if (authState.remarks === "name") {
-      document.getElementById("name").style.backgroundColor = "#FBE9E9";
-      document.getElementById("name").focus();
-    }
-    if (authState.remarks === "username") {
-      document.getElementById("username").style.backgroundColor = "#FBE9E9";
-      document.getElementById("username").focus();
-    }
-    if (authState.remarks === "email") {
-      document.getElementById("email").style.backgroundColor = "#FBE9E9";
-      document.getElementById("email").focus();
-    }
-    if (authState.remarks === "contactNumber") {
-      document.getElementById("contact").style.backgroundColor = "#FBE9E9";
-      document.getElementById("contact").focus();
-    }
-    if (authState.remarks === "password") {
-      document.getElementById("password").style.backgroundColor = "#FBE9E9";
-      document.getElementById("password").focus();
-    }
-
-    return () => {
-      
-    };
-  }, [authState]);
 
   const redirectToLoginPage = () => {
     navigate("/");
@@ -57,7 +38,7 @@ const Register = () => {
     document.getElementById("email").style.backgroundColor = "white";
     document.getElementById("contact").style.backgroundColor = "white";
     document.getElementById("password").style.backgroundColor = "white";
-    dispatch(authActions.resetInput())
+    setErrorMessage("");
   };
 
   const registerHandler = () => {
@@ -66,12 +47,36 @@ const Register = () => {
     const email = emailRef.current.value;
     const contactNumber = contactNumberRef.current.value;
     const password = passwordRef.current.value;
-    dispatch(authActions.register({ name, username, email, contactNumber, password }));
+    try {
+      setIsError(false);
+      register(name, username, email, contactNumber, password);
+    } catch (err) {
+      setErrorMessage(err.message);
+      setIsError(err.type);
+      switch (err.remarks) {
+        case NAME:
+          document.getElementById("name").style.backgroundColor = "#FBE9E9";
+          document.getElementById("name").focus();
+          break;
+        case USERNAME:
+          document.getElementById("username").style.backgroundColor = "#FBE9E9";
+          document.getElementById("username").focus();
+          break;
+        case EMAIL:
+          document.getElementById("email").style.backgroundColor = "#FBE9E9";
+          document.getElementById("email").focus();
+          break;
+        case PASSWORD:
+          document.getElementById("password").style.backgroundColor = "#FBE9E9";
+          document.getElementById("password").focus();
+          break;
+        case CONTACT_NUMBER:
+          document.getElementById("contact").style.backgroundColor = "#FBE9E9";
+          document.getElementById("contact").focus();
+          break;
+      }
+    }
   };
-
-  if (authState.isAuthenticated) {
-    redirectToLoginPage();
-  }
 
   return (
     <div className="login-container">
@@ -133,13 +138,7 @@ const Register = () => {
           </div>
           <br />
           <br />
-          <div
-            style={
-              authState.isAuthenticated ? { color: "black" } : { color: "red" }
-            }
-          >
-            {authState.message}
-          </div>
+          <div style={{ color: "red" }}>{errorMessage}</div>
           <br />
           <br />
           <div className="p-field">

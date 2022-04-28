@@ -1,47 +1,40 @@
 // @ts-nocheck
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./css/authStyles.css";
 import { useNavigate } from "react-router-dom";
 import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
-import { useEffect, useRef } from "react";
-import { useDispatch } from "react-redux";
-import { authActions } from '../../store/slices/auth/reducer';
-import { useSelector } from "react-redux";
-import { SUCCESS } from "../../constants/authConstants";
+import { useRef, useState } from "react";
+import { forgetPassword } from "./ForgetPassword.actions";
 
 const ForgetPassword = () => {
-  const authState = useSelector(state => state.auth);
-  const dispatch = useDispatch();
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isError, setIsError] = useState(false);
   const navigate = useNavigate();
   const usernameRef: any = useRef();
 
-
-  useEffect(() => {
-    if (authState.remarks === SUCCESS) {
-      document.getElementById("username").style.backgroundColor = "white";
-    } else {
-      if (authState.message !== "") {
+  const resetHandler = () => {
+    const username = usernameRef.current.value;
+    try {
+      forgetPassword(username);
+    } catch (err) {
+      setIsError(err.type);
+      setErrorMessage(err.message);
+      if (err.type) {
         document.getElementById("username").style.backgroundColor = "#FBE9E9";
         document.getElementById("username").focus();
       }
     }
-  }, [authState]);
-
-  const redirectToMainPage = () => {
-    dispatch(authActions.resetInput());
-    navigate("/");
   };
 
-  const resetHandler = () => {
-    const username = usernameRef.current.value;
-    dispatch(authActions.resetPassword({ username }));
+  const redirectToMainPage = () => {
+    resetInput();
+    navigate("/");
   };
 
   const resetInput = () => {
     document.getElementById("username").style.backgroundColor = "white";
-    dispatch(authActions.resetInput());
+    setErrorMessage("");
   };
 
   return (
@@ -63,14 +56,8 @@ const ForgetPassword = () => {
             />
             <br />
             <br />
-            <div
-              style={
-                (authState.remarks === SUCCESS)
-                  ? { color: "black" }
-                  : { color: "red" }
-              }
-            >
-              {authState.message}
+            <div style={isError ? { color: "red" } : { color: "black" }}>
+              {errorMessage}
             </div>
           </div>
           <br />

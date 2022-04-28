@@ -87,7 +87,7 @@ export const getAuthErrorMessage = (state: any, type: string) => {
       };
     case UNSUCCESSFUL_USERNAME:
       return {
-        ...state,
+        isAuthenticated: BOOLEAN_FALSE,
         message: "Invalid username or password",
         remarks: "",
       };
@@ -126,7 +126,7 @@ export const getAuthErrorMessage = (state: any, type: string) => {
         isAuthenticated: BOOLEAN_FALSE,
         message: "",
         remarks: "",
-      }
+      };
     default:
       return {
         ...state,
