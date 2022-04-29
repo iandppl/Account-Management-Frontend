@@ -19,7 +19,6 @@ const App = () => {
   const isAuth = useSelector((state) => state.auth.isAuthenticated);
 
   useEffect(() => {
-    console.log("testing app.");
   }, [isAuth]);
 
   return (

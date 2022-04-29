@@ -6,8 +6,10 @@ import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { useRef, useState } from "react";
 import { forgetPassword } from "./ForgetPassword.actions";
+import { useSelector } from "react-redux";
 
 const ForgetPassword = () => {
+  const isAuth = useSelector((state) => state.auth.isAuthenticated);
   const [errorMessage, setErrorMessage] = useState("");
   const [isError, setIsError] = useState(false);
   const navigate = useNavigate();
@@ -37,6 +39,9 @@ const ForgetPassword = () => {
     setErrorMessage("");
   };
 
+  if (isAuth) {
+    redirectToMainPage();
+  }
   return (
     <div className="login-container">
       <Card

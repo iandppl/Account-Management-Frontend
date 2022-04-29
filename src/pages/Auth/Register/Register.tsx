@@ -6,7 +6,7 @@ import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { register } from "./Register.actions";
 import {
   CONTACT_NUMBER,
@@ -18,8 +18,8 @@ import {
 import { authActions } from "../../../store/slices/authenticationSlice";
 
 const Register = () => {
+  const isAuth = useSelector((state) => state.auth.isAuthenticated);
   const [errorMessage, setErrorMessage] = useState("");
-  const [isError, setIsError] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const nameRef: any = useRef();
@@ -28,7 +28,7 @@ const Register = () => {
   const contactNumberRef: any = useRef();
   const passwordRef: any = useRef();
 
-  const redirectToLoginPage = () => {
+  const redirectToMainPage = () => {
     navigate("/");
   };
 
@@ -47,12 +47,11 @@ const Register = () => {
     const email = emailRef.current.value;
     const contactNumber = contactNumberRef.current.value;
     const password = passwordRef.current.value;
+    let res: boolean = false;
     try {
-      setIsError(false);
-      register(name, username, email, contactNumber, password);
+      res = register(name, username, email, contactNumber, password);
     } catch (err) {
       setErrorMessage(err.message);
-      setIsError(err.type);
       switch (err.remarks) {
         case NAME:
           document.getElementById("name").style.backgroundColor = "#FBE9E9";
@@ -75,8 +74,16 @@ const Register = () => {
           document.getElementById("contact").focus();
           break;
       }
+    } finally {
+      if (res) {
+        dispatch(authActions.login());
+      }
     }
   };
+
+  if (isAuth) {
+    redirectToMainPage();
+  }
 
   return (
     <div className="login-container">

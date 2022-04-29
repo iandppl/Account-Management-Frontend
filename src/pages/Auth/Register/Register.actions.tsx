@@ -31,6 +31,7 @@ export const register = (
     validContactNumberCheck(contactNumber) &&
     passwordComplexityCheck(password)
   ) {
+    return true;
   } else {
     if (!validNameCheck(name)) {
       throw new CustomError("Please enter your name", BOOLEAN_TRUE, NAME);

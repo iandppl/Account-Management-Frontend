@@ -7,12 +7,15 @@ import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { useRef, useState } from "react";
 import { login } from "./Login.actions";
+import { authActions } from "../../../store/slices/authenticationSlice";
+import { useDispatch } from "react-redux";
 
 const Login = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const usernameRef = useRef();
   const passwordRef = useRef();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const resetInput = () => {
     document.getElementById("username").style.backgroundColor = "white";
@@ -23,13 +26,18 @@ const Login = () => {
   const loginHandler = () => {
     const username = usernameRef.current.value;
     const password = passwordRef.current.value;
+    let res: boolean = false;
     try {
-      login(username, password);
+      res = login(username, password);
     } catch (err) {
       setErrorMessage(err.message);
       document.getElementById("username").style.backgroundColor = "#FBE9E9";
       document.getElementById("password").style.backgroundColor = "#FBE9E9";
       document.getElementById("username").focus();
+    } finally {
+      if (res) {
+        dispatch(authActions.login());
+      }
     }
   };
 
@@ -42,6 +50,7 @@ const Login = () => {
     resetInput();
     navigate("/forgetpassword");
   };
+
 
   return (
     <div className="login-container">
