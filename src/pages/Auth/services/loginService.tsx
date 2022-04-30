@@ -20,7 +20,12 @@ export const loginByUsername = (username: string, password: string) => {
 
 export const loginRequest = async (username: string, password: string) => {
 
-  fetch(DEFAULT_URL + "api/login?username=" + username + "&password=" + password)
+  let params = new URLSearchParams({
+    username,
+    password,
+  })
+  
+  fetch(DEFAULT_URL + "api/login?" + params)
     .then((response) => response.json().then((data) => console.log(data)))
     .catch((error) => console.log(error));
 
