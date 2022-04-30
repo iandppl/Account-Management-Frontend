@@ -158,7 +158,7 @@ const Register = () => {
           <div className="p-field">
             Have an account?{" "}
             <span
-              onClick={() => redirectToLoginPage()}
+              onClick={() => redirectToMainPage()}
               style={{ textDecoration: "underline", cursor: "pointer" }}
             >
               Login here

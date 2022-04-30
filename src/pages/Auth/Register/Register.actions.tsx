@@ -16,7 +16,9 @@ import {
   validNameCheck,
   validUsernameCheck,
 } from "../common/validations";
+import { registerRequest } from "../services/registerService";
 
+let res: any;
 export const register = (
   name: string,
   username: string,
@@ -31,7 +33,12 @@ export const register = (
     validContactNumberCheck(contactNumber) &&
     passwordComplexityCheck(password)
   ) {
-    return true;
+    try {
+      res = registerRequest(name, username, password, email, contactNumber);
+    } catch (err) {
+      console.log("res", err)
+    }
+    return false;
   } else {
     if (!validNameCheck(name)) {
       throw new CustomError("Please enter your name", BOOLEAN_TRUE, NAME);

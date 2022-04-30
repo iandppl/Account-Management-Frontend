@@ -19,21 +19,12 @@ export const loginByUsername = (username: string, password: string) => {
 };
 
 export const loginRequest = async (username: string, password: string) => {
-  let reply: any;
-  const userObj = {
-    username: username,
-    password: password,
-  };
 
-  try {
-    await fetch(DEFAULT_URL + "login", requestOptions(userObj))
-      .then((response) => (reply = response))
-      .catch((error) => console.log(error));
-  } catch (err) {
-    console.log(err);
-  }
+  fetch(DEFAULT_URL + "api/login?username=" + username + "&password=" + password)
+    .then((response) => response.json().then((data) => console.log(data)))
+    .catch((error) => console.log(error));
 
-  return reply;
+
 };
 
 export const loginByEmail = (email: string, password: string) => {
